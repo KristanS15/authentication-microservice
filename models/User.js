@@ -1,31 +1,35 @@
 const bcrypt = require('bcrypt');
-const bookshelf = require('../bookshelf');
+const Model = require('../objection');
 
-var User = bookshelf.Model.extend({
-    tableName: 'users',
-    initialize: function () {
-        this.on('creating', this.encryptPassword);
-    },
-    hasTimestamps: true,
-    encryptPassword: (model, attrs, options) => {
-        return new Promise((resolve, reject) => {
-            bcrypt.hash(model.attributes.password, 10, (err, hash) => {
-                if (err) return reject(err);
-                model.set('password', hash);
-                resolve(hash);
-            });
-        });
-    },
-    validatePassword: function (suppliedPassword) {
+class User extends Model {
+    static get tableName() {
+        return 'users';
+    }
+
+    validatePassword(suppliedPassword) {
         let self = this;
         return new Promise(function (resolve, reject) {
-            const hash = self.attributes.password;
+            const hash = self.password;
             bcrypt.compare(suppliedPassword, hash, (err, res) => {
                 if (err) return reject(err);
                 return resolve(res);
             });
         });
     }
-});
+
+    clean() {
+        let self = this;
+        let viewable_keys = ["id", "username"];
+        let clean_user = {};
+
+        Object.keys(self).forEach(e => {
+            if(viewable_keys.includes(e)) {
+                clean_user[e] = self[e];
+            }
+        });
+
+        return clean_user;
+    }
+}
 
 module.exports = User;

@@ -1,4 +1,7 @@
-var knex = require('knex')({
+const { Model } = require('objection');
+const Knex = require('knex');
+
+const knex = Knex({
     client: 'mysql',
     connection: {
         host: '127.0.0.1',
@@ -9,6 +12,6 @@ var knex = require('knex')({
     }
 });
 
-var bookshelf = require('bookshelf')(knex);
+Model.knex(knex);
 
-module.exports = bookshelf;
+module.exports = Model;
