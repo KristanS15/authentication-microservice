@@ -6,6 +6,14 @@ class User extends Model {
         return 'users';
     }
 
+    $beforeInsert() {
+        this.created_at = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    }
+
+    $beforeUpdate() {
+        this.updated_at = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    }
+
     validatePassword(suppliedPassword) {
         let self = this;
         return new Promise(function (resolve, reject) {
