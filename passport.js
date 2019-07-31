@@ -1,5 +1,6 @@
-const passport = require('passport');
+const fs = require('fs');
 
+const passport = require('passport');
 const passportJWT = require("passport-jwt");
 const ExtractJWT = passportJWT.ExtractJwt;
 const JWTStrategy = passportJWT.Strategy;
@@ -37,7 +38,7 @@ passport.use(new LocalStrategy({
 
 passport.use(new JWTStrategy({
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-    secretOrKey: 'your_jwt_secret'
+    secretOrKey: fs.readFileSync('./private.key', 'utf8')
 },
     function (jwtPayload, done) {
         return User
