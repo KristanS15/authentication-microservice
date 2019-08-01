@@ -27,7 +27,7 @@ passport.use(new LocalStrategy({
                     if (!valid) {
                         return done(null, false);
                     }
-                    return done(null, JSON.parse(JSON.stringify(usr.clean())));
+                    return done(null, usr.clean());
                 });
             })
             .catch((err) => {
@@ -45,7 +45,7 @@ passport.use(new JWTStrategy({
             .query()
             .findById(jwtPayload.id)
             .then(usr => {
-                return done(null, JSON.parse(JSON.stringify(usr)));
+                return done(null, usr.clean());
             })
             .catch(err => {
                 return done(err);
@@ -57,10 +57,15 @@ passport.use(new RefreshTokenStrategy(
     function(refresh_token, done) {
         return User
             .query()
-            .where({ refreshToken: refresh_token })
+            .where({ refresh_token: refresh_token })
             .first()
             .then(usr => {
-                return done(null, JSON.parse(JSON.stringify(usr.clean())));
+                console.log(usr.hasActiveRefreshToken());
+                if(usr.hasActiveRefreshToken()) {
+                    return done(null, usr.clean());
+                } else {
+                    return done(null, false);
+                }
             })
             .catch(err => {
                 return done(err);

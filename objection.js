@@ -1,16 +1,10 @@
 const { Model } = require('objection');
 const Knex = require('knex');
+const knex_connection = require('./knexfile');
 
-const knex = Knex({
-    client: 'mysql',
-    connection: {
-        host: '127.0.0.1',
-        user: 'root',
-        password: 'root',
-        database: 'auth',
-        charset: 'utf8'
-    }
-});
+const knex = Knex(
+    knex_connection.development
+);
 
 Model.knex(knex);
 
