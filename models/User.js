@@ -9,11 +9,11 @@ class User extends Model {
     static get jsonSchema() {
         return {
             type: "object",
-            required: ["username", "password"],
-
+            required: ["username", "email", "password"],
             properties: {
                 id: {type: "integer"},
                 username: {type: "string"},
+                email: {type: "string", format: "email"},
                 password: {type: "string", minLength: 6}
             }
         }
@@ -21,13 +21,13 @@ class User extends Model {
 
     async $beforeInsert() {
         this.created_at = new Date().toISOString().slice(0, 19).replace('T', ' ');
-        this.password = await bcrypt.hash(this.password, 10);
+        this.password = await bcrypt.hash(this.password, 12);
     }
 
     async $beforeUpdate() {
         this.updated_at = new Date().toISOString().slice(0, 19).replace('T', ' ');
         if(this.password) {
-            this.password = await bcrypt.hash(this.password, 10);
+            this.password = await bcrypt.hash(this.password, 12);
         }
     }
 

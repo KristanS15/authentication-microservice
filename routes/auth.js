@@ -25,16 +25,17 @@ router.post('/login', function (req, res) {
 
 /* POST register new user */
 router.post('/register', function(req, res, next) {
-    var { username, password } = req.body;
+    var { username, email, password } = req.body;
 
     User
         .query()
-        .insertAndFetch({username: username, password: password})
+        .insertAndFetch({username: username, email: email, password: password})
         .then((user) => {
             const token = new Token(user.clean());
             return res.json({ user: user.clean(), token }) 
         })
         .catch((err) => {
+            console.log(err);
             return errorHandler(err, res);
         })
 });

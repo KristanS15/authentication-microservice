@@ -4,6 +4,7 @@ exports.up = function(knex) {
         .createTable('user', function (table) {
             table.increments('id');
             table.string('username').unique().notNullable();
+            table.string('email').unique().notNullable();
             table.string('password').notNullable();
             table.string('refresh_token', 256);
             table.timestamp('refresh_token_expiry');
