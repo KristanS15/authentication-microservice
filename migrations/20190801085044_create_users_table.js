@@ -3,7 +3,7 @@ exports.up = function(knex) {
     return knex.schema
         .createTable('user', function (table) {
             table.increments('id');
-            table.string('username').notNullable();
+            table.string('username').unique().notNullable();
             table.string('password').notNullable();
             table.string('refresh_token', 256);
             table.timestamp('refresh_token_expiry');

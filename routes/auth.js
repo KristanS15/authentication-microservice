@@ -6,6 +6,8 @@ const passport = require('passport');
 const User = require('../models/User');
 const Token = require('../models/Token');
 
+const errorHandler = require('../errors');
+
 /* POST login */
 router.post('/login', function (req, res) {
     passport.authenticate('local', { session: false }, (err, user, info) => {
@@ -33,10 +35,7 @@ router.post('/register', function(req, res, next) {
             return res.json({ user: user.clean(), token }) 
         })
         .catch((err) => {
-            return res.status(400).json({
-                message: err.data ? err.data : 'Register failed',
-                user: false
-            });
+            return errorHandler(err, res);
         })
 });
 
