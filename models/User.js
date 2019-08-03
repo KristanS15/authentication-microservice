@@ -14,7 +14,11 @@ class User extends Model {
                 id: {type: "integer"},
                 username: {type: "string"},
                 email: {type: "string", format: "email"},
-                password: {type: "string", minLength: 6}
+                password: {type: "string", minLength: 6},
+                refresh_token: {type: "string"},
+                refresh_token_expiry: {type: "string"},
+                password_reset_token: {type: "string"},
+                password_reset_token_expiry: {type: "string"}
             }
         }
     }
@@ -44,6 +48,10 @@ class User extends Model {
 
     hasActiveRefreshToken() {
         return this.refresh_token_expiry > new Date();
+    }
+
+    hasActivePasswordResetToken() {
+        return this.password_reset_token_expiry > new Date();
     }
 
     clean() {

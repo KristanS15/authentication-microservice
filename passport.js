@@ -38,7 +38,7 @@ passport.use(new LocalStrategy({
 
 passport.use(new JWTStrategy({
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-    secretOrKey: fs.readFileSync('./private.key', 'utf8')
+    secretOrKey: fs.readFileSync(process.env.PUBLIC_KEY_LOCATION, process.env.KEY_CHARSET || 'utf8')
 },
     function (jwtPayload, done) {
         return User
@@ -60,7 +60,6 @@ passport.use(new RefreshTokenStrategy(
             .where({ refresh_token: refresh_token })
             .first()
             .then(usr => {
-                console.log(usr.hasActiveRefreshToken());
                 if(usr.hasActiveRefreshToken()) {
                     return done(null, usr.clean());
                 } else {

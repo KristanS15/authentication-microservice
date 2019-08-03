@@ -5,7 +5,7 @@ const knex_connection = require('./knexfile');
 const { DBErrors } = require('objection-db-errors');
 
 const knex = Knex(
-    knex_connection.development
+    knex_connection[process.env.ENV || "production"]
 );
 
 class BaseModel extends DBErrors(Model) {

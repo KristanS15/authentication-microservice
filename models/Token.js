@@ -12,8 +12,8 @@ class Token {
     }
 
     accessToken(user) {
-        const privateKEY  = fs.readFileSync('./private.key', 'utf8');
-        return jwt.sign(user, privateKEY, { expiresIn: 900 });
+        const privateKEY = fs.readFileSync(process.env.PRIVATE_KEY_LOCATION, process.env.KEY_CHARSET || 'utf8');
+        return jwt.sign(user, privateKEY, { expiresIn: 900, algorithm: process.env.KEY_ENCRYPTION || "RS256" });
     }
 
     refreshToken() {

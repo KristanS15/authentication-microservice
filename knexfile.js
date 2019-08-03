@@ -1,19 +1,17 @@
 // Update with your config settings.
 
 module.exports = {
-
-	development: {
-		client: 'mysql',
+	[process.env.ENV || "production"]: {
+		client: process.env.DB_CLIENT,
 		connection: {
-			host: '127.0.0.1',
-			user: 'root',
-			password: 'root',
-			database: 'auth',
-			charset: 'utf8'
+			host: process.env.DB_HOST,
+			user: process.env.DB_USER,
+			password: process.env.DB_PASS,
+			database: process.env.DB_NAME,
+			charset: process.env.DB_CHARSET || 'utf8'
 		},
 		migrations: {
 			tableName: 'knex_migrations'
 		}
 	}
-
 };
