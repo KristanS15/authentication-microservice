@@ -167,21 +167,30 @@ router.post('/password/reset', function (req, res, next) {
         .then((user) => {
             if(user) {
                 if(user.hasActivePasswordResetToken()) {
-                    User
-                        .query()
-                        .patch({
-                            password: password,
-                            password_reset_token: "",
-                            password_reset_token_expiry: expiryDate
-                        })
-                        .findById(user.id)
-                        .then(() => {
-                            return res.status(200).json({
-                                message: 'Password updated.'
-                            });
-                        })
-                        .catch((err) => {
-                            return errorHandler(res, err);
+                    user.validatePassword(password)
+                        .then((valid) => {
+                            if(valid) {
+                                return res.status(400).json({
+                                    message: 'Resetting to same password.'
+                                });
+                            } else {
+                                User
+                                    .query()
+                                    .patch({
+                                        password: password,
+                                        password_reset_token: "",
+                                        password_reset_token_expiry: expiryDate
+                                    })
+                                    .findById(user.id)
+                                    .then(() => {
+                                        return res.status(200).json({
+                                            message: 'Password updated.'
+                                        });
+                                    })
+                                    .catch((err) => {
+                                        return errorHandler(res, err);
+                                    })
+                            }
                         })
                 }
             } else {
